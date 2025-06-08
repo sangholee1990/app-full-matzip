@@ -1,0 +1,16 @@
+{
+  "splash": {
+    "backgroundColor": "#F99231",
+    "imagePath": "images/logo.png",
+    "imageWidthRatio": 0.5,
+    "imageHeightRatio": 0.5,
+    "loadingIndicatorColor": "#FFFFFF"
+  },
+  "home": {
+    "backgroundColor": "#FFFFFF",
+    "imagePath": "images/home.png",
+    "imageWidthRatio": 0.6,
+    "imageHeightRatio": 0.4,
+    "loadingIndicatorColor": "#000000"
+  }
+}
