@@ -4,8 +4,9 @@ import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
-import 'package:flutter_config/flutter_config.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_config/flutter_config.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dot_json_env/flutter_dot_json_env.dart';
 
 //================================================================================
 // 3. Home Screen (Iphone13Mini2.dart 기반)
@@ -37,13 +38,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const double figmaHeaderActualHeight = 15.0 + 27.0 + 10.0;
 
-    // print(FlutterConfig.get('BASE_URL'));
-    // print(FlutterConfig.get('BASE_URL'));
-    // print(FlutterConfig.get('API_KEY'));
-
-    print(dotenv.env['APP_NAME']);
-    print(dotenv.env['BASE_URL']);
-    print(dotenv.env['API_KEY']);
+    // print(dotjsonenv.get('APP_NAME'));
+    // print(dotjsonenv.get('BASE_URL'));
+    // print(dotjsonenv.get('API_KEY'));
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),

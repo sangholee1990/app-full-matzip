@@ -9,8 +9,9 @@ import 'screens/apartment_data_screen.dart';
 import 'screens/apartment_detail_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dot_json_env/flutter_dot_json_env.dart';
+import 'dart:convert';
 
 //================================================================================
 // 1. Main Application & Navigation Setup (기존 파일들을 통합하는 메인 파일)
@@ -18,19 +19,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 //================================================================================
 // void main() {
 Future<void> main() async {
-  // Flutter 엔진과 위젯 바인딩 초기화 보장
   WidgetsFlutterBinding.ensureInitialized();
 
-  // .env 파일의 변수들을 로드
-  // await FlutterConfig.loadEnvVariables();
-  // print(FlutterConfig.get('BASE_URL'));
-  // print(FlutterConfig.get('BASE_URL'));
-  // print(FlutterConfig.get('API_KEY'));
-
-  await dotenv.load(fileName: ".env");
-  print(dotenv.env['APP_NAME']);
-  print(dotenv.env['BASE_URL']);
-  print(dotenv.env['API_KEY']);
+  await dotenv.load(fileName: "config/local.env");
+  print(dotenv.get('APP_NAME', fallback: null));
+  print(dotenv.get('BASE_URL', fallback: null));
+  print(dotenv.get('API_KEY', fallback: null));
+  // print(dotenv.get('API_LIST/APP_NAME', fallback: null));
+  // print(dotenv.get('API_LIST.APP_NAME', fallback: null));
 
   runApp(const MatzipApp());
 }

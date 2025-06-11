@@ -55,8 +55,9 @@ dependencies:
   firebase_vertexai: ^1.0.3    # Vertexai (멀티모달) - 관심있으면 구현해 볼 것
   image_picker_windows: ^0.2.1+1
   fl_chart: ^0.68.0
-  flutter_config: ^2.0.2
+  flutter_dot_json_env: ^1.0.3
   flutter_dotenv: ^5.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -84,8 +85,8 @@ flutter:
   assets:
     - images/
     - json/
-    - .env
-  #    - images/a_dot_burr.jpeg
+    - config/local.json
+    - config/local.env
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

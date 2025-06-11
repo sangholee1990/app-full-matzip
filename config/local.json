@@ -1,0 +1,6 @@
+{
+  "APP_NAME": "https://api.local.dev.com",
+  "BASE_URL": "foo",
+  "API_KEY": "bar",
+  "API_KEY.aa": "API_KEY2"
+}
