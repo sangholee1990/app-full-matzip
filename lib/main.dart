@@ -22,11 +22,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: "config/local.env");
-  print(dotenv.get('APP_NAME', fallback: null));
   print(dotenv.get('BASE_URL', fallback: null));
   print(dotenv.get('API_KEY', fallback: null));
-  // print(dotenv.get('API_LIST/APP_NAME', fallback: null));
-  // print(dotenv.get('API_LIST.APP_NAME', fallback: null));
 
   runApp(const MatzipApp());
 }

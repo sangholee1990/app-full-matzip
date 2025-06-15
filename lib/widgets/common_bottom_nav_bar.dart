@@ -89,7 +89,7 @@ class CommonBottomNavigationBar extends StatelessWidget {
           Navigator.pushReplacementNamed(context, '/apartment-data');
           break;
         case 2:
-          Navigator.pushReplacementNamed(context, '/apartment-details');
+          // Navigator.pushReplacementNamed(context, '/apartment-details');
           break;
         case 3:
           Navigator.pushReplacementNamed(context, '/ai-recommendation-preview');
