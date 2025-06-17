@@ -54,7 +54,20 @@ class _AiRecommendationScreenState extends State<AiRecommendationScreen> {
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: [
-                  Positioned(left: 0, top: 12, child: Row(children: const [Icon(Icons.business_center, color: Colors.white, size: 24), SizedBox(width: 8), Text("MATZIP", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Pretendard Variable'))])),
+                  Positioned(
+                      left: 0,
+                      top: 12,
+                      child: Row(children: const [
+                        Icon(Icons.business_center,
+                            color: Colors.white, size: 24),
+                        SizedBox(width: 8),
+                        Text("MATZIP",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Pretendard Variable'))
+                      ])),
                   const Positioned(right: 35, top: 12, child: Icon(Icons.notifications_none, color: Colors.white, size: 26)),
                   const Positioned(right: 0, top: 12, child: Icon(Icons.person_outline, color: Colors.white, size: 26)),
                   Positioned(left: -4, top: 12 + 40, child: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24), onPressed: () => Navigator.pop(context))), // ** 뒤로가기 기능 추가 **

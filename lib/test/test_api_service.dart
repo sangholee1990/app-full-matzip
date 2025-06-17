@@ -16,6 +16,7 @@ Future<void> main() async {
   final params = {
     'page': 1,
     'limit': 10,
+    'sgg': '경기도 군포시',
   };
 
   print("API 호출 시작: $params");
@@ -23,7 +24,7 @@ Future<void> main() async {
   // 4. API 호출 및 결과 처리 (에러 핸들링 포함)
   try {
     final Map<String, dynamic> results = await apiService.fetchData(
-      apiUrl: '/api/sel-real',
+      apiUrl: '/api/sel-statRealMaxBySggApt',
       apiParam: params,
     );
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
@@ -25,8 +24,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // 2. 상태 변수 선언
   final MatzipApiService _apiService = MatzipApiService();
+
   final List<String> _apartmentFilters = ["전국", "서울", "경기", "인천", "부산"];
   late String _selectedApartmentFilter;
   late Future<Map<String, dynamic>> _apartmentsFuture;
@@ -36,6 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
   late String _selectedRegionTab;
   late Future<Map<String, dynamic>> _regionsFuture;
   String? _selectedSubRegion;
+
+  late String _selArea;
+  late Future<Map<String, dynamic>> _selAreaData;
+  int _selAreaLimit = 10;
+  String? _selAreaSgg;
 
   @override
   void initState() {
@@ -47,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // 위젯이 처음 로드될 때 '전국'에 대한 데이터를 가져옴
     _fetchApartments();
     _fetchRegions();
+    _fetchAreaData();
   }
 
   // 필터에 맞는 데이터를 불러오는 함수
@@ -75,6 +80,24 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _fetchAreaData() {
+    setState(() {
+      if (_selAreaSgg == null) {
+        _selAreaData = Future.value({'data': []});
+        return;
+      }
+
+      _selAreaData = _apiService.fetchData(
+          apiUrl: '/api/sel-statRealMaxBySggApt',
+          apiParam: {
+            'sgg': _selAreaSgg,
+            'page': 1,
+            'limit': _selAreaLimit,
+            'sort': 'cnt|desc'
+          });
+    });
+  }
+
   // 필터 버튼이 탭되었을 때 호출될 함수
   void _onFilterTapped(String filter) {
     // 이미 선택된 필터가 아니면 새로운 데이터를 불러옴
@@ -87,10 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onSeeMoreTapped() {
     setState(() {
-      // limit을 30으로 변경
       _currentLimit = 30;
     });
-    // 현재 선택된 필터 기준으로 데이터를 다시 불러옴
     _fetchApartments();
   }
 
@@ -102,6 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
         _fetchRegions();
       });
     }
+  }
+
+  void _onAreaDataSeeMore() {
+    setState(() {
+      _selAreaLimit = 30;
+    });
+    _fetchAreaData();
   }
 
   // 스타일 정의는 원본과 동일하게 유지...
@@ -206,33 +234,41 @@ class _HomeScreenState extends State<HomeScreen> {
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: figmaHeaderActualHeight, bottom: 60), // 하단 여백 추가
+                  top: figmaHeaderActualHeight,
+                  bottom: 60,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                        child: Text('AI 매물 추천 미리보기', style: _headerTitleStyle)),
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                      child: Text('AI 매물 추천 미리보기', style: _headerTitleStyle),
+                    ),
                     const SizedBox(height: 15),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildRecommendationCard(context,
-                              title: '교육을 중시하는',
-                              subtitle: '3040 부부에게 \n맞는 집',
-                              gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFF0B4438),
-                                    Color(0xFF1BAA8B)
-                                  ])),
-                          _buildRecommendationCard(context,
-                              title: '교통과 편의성을 중시하는',
-                              subtitle: '2030 학생과 \n직장인에게 맞는 집',
-                              color: const Color(0xFF14B997)),
+                          _buildRecommendationCard(
+                            context,
+                            title: '교육을 중시하는',
+                            subtitle: '3040 부부에게 \n맞는 집',
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF0B4438),
+                                Color(0xFF1BAA8B),
+                              ],
+                            ),
+                          ),
+                          _buildRecommendationCard(
+                            context,
+                            title: '교통과 편의성을 중시하는',
+                            subtitle: '2030 학생과 \n직장인에게 맞는 집',
+                            color: const Color(0xFF14B997),
+                          ),
                         ],
                       ),
                     ),
@@ -241,18 +277,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: InkWell(
                         onTap: () => Navigator.pushNamed(
-                            context, '/ai-recommendation-preview'),
+                          context,
+                          '/ai-recommendation-preview',
+                        ),
                         child: Container(
-                            height: 40,
-                            decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        width: 1, color: Color(0x7F199C80)),
-                                    borderRadius: BorderRadius.circular(10))),
-                            child: const Center(
-                                child: Text('구독하고 나에게 꼭 맞는 매물 추천 보기',
-                                    style: _subscribeButtonTextStyle))),
+                          height: 40,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                width: 1,
+                                color: Color(0x7F199C80),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              '구독하고 나에게 꼭 맞는 매물 추천 보기',
+                              style: _subscribeButtonTextStyle,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 15),
@@ -263,10 +309,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: _buildInfoSection(
                         title: 'TOP 10 아파트',
                         future: _apartmentsFuture,
+                        data: _apartmentsFuture,
                         headerContent: _buildApartmentFilters(),
                         // 필터 버튼 UI
                         itemBuilder: (itemData, index) {
-                          // 아이템을 그리는 방법을 함수로 전달
+                          if (itemData['apt'] == null)
+                            return const SizedBox.shrink();
+
                           final String rank = (index + 1).toString();
                           final String name = itemData['apt'] ?? '이름 없음';
                           final String details =
@@ -275,8 +324,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           final bool hasUpArrow =
                               !isNew && Random(index + 1).nextBool();
                           return _buildApartmentListItem(
-                              context, rank, name, details,
-                              isNew: isNew, hasUpArrow: hasUpArrow);
+                            context,
+                            rank,
+                            name,
+                            details,
+                            isNew: isNew,
+                            hasUpArrow: hasUpArrow,
+                          );
                         },
                         onSeeMoreTapped: _onSeeMoreTapped,
                       ),
@@ -286,15 +340,52 @@ class _HomeScreenState extends State<HomeScreen> {
                     // [개선] 동일한 빌더 함수로 'TOP 지역' 섹션 구성
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      // child: _buildRegionListSection(),
                       child: _buildInfoSection(
                         title: 'TOP 10 지역',
                         future: _regionsFuture,
-                        // headerContent: _buildRegionTabs(),
-                        headerContent: _buildRegionSelector(),
+                        data: _selAreaData,
+                        // headerContent: _buildRegionSelector(),
+                        headerContent: _buildRegionSelector(
+                          onTabSelected: (tabName) {
+                            // 기존 _onRegionTabTapped의 로직
+                            _onRegionTabTapped(tabName);
+                          },
+                          onSubRegionSelected: (newValue) {
+                            // 기존 Dropdown의 onChanged 로직
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedSubRegion = newValue;
+                                _selAreaSgg = newValue;
+                                _selAreaLimit = 10;
+                                _fetchAreaData();
+                              });
+                            }
+                          },
+                        ),
                         itemBuilder: (itemData, index) {
-                          return _buildRegionItem(itemData['sgg'] ?? '-');
+
+                          if (itemData['apt'] == null) {
+                            return const SizedBox.shrink();
+                          }
+
+
+                          final String rank = (index + 1).toString();
+                          final String name = itemData['apt'] ?? '이름 없음';
+                          final String details =
+                              "조회수 증가 +${itemData['cnt'] ?? ''}";
+                          final bool isNew = Random(index).nextBool();
+                          final bool hasUpArrow =
+                              !isNew && Random(index + 1).nextBool();
+                          return _buildApartmentListItem(
+                            context,
+                            rank,
+                            name,
+                            details,
+                            isNew: isNew,
+                            hasUpArrow: hasUpArrow,
+                          );
                         },
+                        onSeeMoreTapped: _onAreaDataSeeMore,
                       ),
                     ),
                     const SizedBox(height: 20 + 60),
@@ -309,24 +400,50 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 color: const Color(0xFFF7F8FA).withOpacity(0.95),
                 padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 15, bottom: 10),
+                  left: 20,
+                  right: 20,
+                  top: 15,
+                  bottom: 10,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(
-                        width: 92,
-                        height: 27,
-                        child: Center(
-                            child: Text("[MATZIP Logo]",
-                                style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 12)))),
-                    Row(children: const [
-                      Icon(Icons.notifications_none,
-                          color: Color(0xFF161D24), size: 24),
-                      SizedBox(width: 20),
-                      Icon(Icons.person_outline,
-                          color: Color(0xFF161D24), size: 24)
-                    ]),
+                    const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      // 자식 위젯들의 크기만큼만 공간을 차지하도록 설정
+                      children: [
+                        Icon(
+                          Icons.business_center,
+                          color: Color(0xFF161D24),
+                          size: 24,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "MATZIP",
+                          style: TextStyle(
+                            color: Color(0xFF161D24),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Pretendard Variable',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.notifications_none,
+                          color: Color(0xFF161D24),
+                          size: 24,
+                        ),
+                        SizedBox(width: 20),
+                        Icon(
+                          Icons.person_outline,
+                          color: Color(0xFF161D24),
+                          size: 24,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -344,7 +461,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // ===========================================================================
   Widget _buildInfoSection({
     required String title,
-    required Future<Map<String, dynamic>> future,
+    // required Future<Map<String, dynamic>> future,
+    Future<Map<String, dynamic>>? future,
+    Future<Map<String, dynamic>>? data,
     required Widget headerContent,
     required Widget Function(Map<String, dynamic> itemData, int index)
         itemBuilder,
@@ -360,7 +479,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- 이 부분은 Future와 관계없이 항상 표시됩니다 ---
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -375,7 +493,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 future: future,
                 builder: (context, snapshot) {
                   // final date = snapshot.hasData ? (snapshot.data!['date'] ?? '-') : '-';
-                  final String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  final String date =
+                      DateFormat('yyyy-MM-dd').format(DateTime.now());
                   return Text('데이터 산출일 : $date',
                       style: _dateTextStyle.copyWith(
                           color: Colors.white.withOpacity(0.7)));
@@ -389,47 +508,50 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 20),
 
           // --- 이 부분만 Future의 상태에 따라 변경됩니다 ---
-          FutureBuilder<Map<String, dynamic>>(
-            future: future,
-            builder: (context, snapshot) {
-              // 1. 로딩 상태 처리
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40.0),
-                        child: CircularProgressIndicator()));
-              }
-              // 2. 에러 상태 처리
-              if (snapshot.hasError) {
-                final errorMessage =
-                    snapshot.error.toString().replaceFirst('Exception: ', '');
-                return Center(
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40.0),
-                        child: Text(errorMessage, style: _listItemNameStyle)));
-              }
-              // 3. 데이터 없음 또는 빈 데이터 처리
-              if (!snapshot.hasData ||
-                  snapshot.data!['data'] == null ||
-                  (snapshot.data!['data'] as List).isEmpty) {
-                return const Center(
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40.0),
-                        child: Text('데이터가 없습니다.', style: _listItemNameStyle)));
-              }
+          if (data != null)
+            FutureBuilder<Map<String, dynamic>>(
+              future: data,
+              builder: (context, snapshot) {
+                // 1. 로딩 상태 처리
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40.0),
+                          child: CircularProgressIndicator()));
+                }
+                // 2. 에러 상태 처리
+                if (snapshot.hasError) {
+                  final errorMessage =
+                      snapshot.error.toString().replaceFirst('Exception: ', '');
+                  return Center(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40.0),
+                          child:
+                              Text(errorMessage, style: _listItemNameStyle)));
+                }
+                // 3. 데이터 없음 또는 빈 데이터 처리
+                if (!snapshot.hasData ||
+                    snapshot.data!['data'] == null ||
+                    (snapshot.data!['data'] as List).isEmpty) {
+                  return const Center(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40.0),
+                          child:
+                              Text('데이터가 없습니다.', style: _listItemNameStyle)));
+                }
 
-              // 4. 성공 시 데이터 목록 표시
-              final List<dynamic> items =
-                  snapshot.data!['data'] as List<dynamic>;
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: items.length,
-                itemBuilder: (context, index) =>
-                    itemBuilder(items[index], index),
-              );
-            },
-          ),
+                // 4. 성공 시 데이터 목록 표시
+                final List<dynamic> items =
+                    snapshot.data!['data'] as List<dynamic>;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: items.length,
+                  itemBuilder: (context, index) =>
+                      itemBuilder(items[index], index),
+                );
+              },
+            ),
 
           // '더보기' 버튼 (콜백이 있을 때만 표시)
           if (onSeeMoreTapped != null) ...[
@@ -439,11 +561,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: onSeeMoreTapped,
                 child: const Opacity(
                     opacity: 0.50,
-                    child: Text('더보기',
-                        textAlign: TextAlign.center, style: _seeMoreStyle)),
+                    child: Text('더보기', textAlign: TextAlign.center, style: _seeMoreStyle)
+                ),
               ),
             ),
-          ]
+          ] else
+            const SizedBox.shrink()
         ],
       ),
     );
@@ -477,39 +600,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Widget _buildRegionTabs() {
-  //   return Row(
-  //     children: _regionTabs.map((tabName) {
-  //       final isSelected = tabName == _selectedRegionTab;
-  //       return Expanded(
-  //         child: InkWell(
-  //           onTap: () => _onRegionTabTapped(tabName),
-  //           child: Container(
-  //             padding: const EdgeInsets.symmetric(vertical: 8),
-  //             decoration: BoxDecoration(
-  //                 border: Border(
-  //                     bottom: BorderSide(
-  //                         color: isSelected ? Colors.white : Colors.transparent,
-  //                         width: 2))),
-  //             child: Text(
-  //               tabName,
-  //               textAlign: TextAlign.center,
-  //               style: TextStyle(
-  //                   color: isSelected
-  //                       ? Colors.white
-  //                       : Colors.white.withOpacity(0.6),
-  //                   fontWeight:
-  //                       isSelected ? FontWeight.bold : FontWeight.normal),
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     }).toList(),
-  //   );
-  // }
-
   // [신규] 탭과 드롭다운을 모두 포함하는 위젯 빌더
-  Widget _buildRegionSelector() {
+  Widget _buildRegionSelector({
+    required ValueChanged<String> onTabSelected,
+    required ValueChanged<String?> onSubRegionSelected,
+}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -519,20 +614,26 @@ class _HomeScreenState extends State<HomeScreen> {
             final isSelected = tabName == _selectedRegionTab;
             return Expanded(
               child: InkWell(
-                onTap: () => _onRegionTabTapped(tabName),
+                // onTap: () => _onRegionTabTapped(tabName),
+                onTap: () => onTabSelected(tabName),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(
-                      color: isSelected ? Colors.white : Colors.transparent, width: 2,
+                    border: Border(
+                        bottom: BorderSide(
+                      color: isSelected ? Colors.white : Colors.transparent,
+                      width: 2,
                     )),
                   ),
                   child: Text(
                     tabName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.6),
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                 ),
@@ -550,20 +651,37 @@ class _HomeScreenState extends State<HomeScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 48,
-                child: Center(child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))),
+                child: Center(
+                    child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white))),
               );
             }
             // 에러 발생 시
             if (snapshot.hasError) {
-              return SizedBox(height: 48, child: Center(child: Text('목록 로드 실패', style: TextStyle(color: Colors.red))));
+              return SizedBox(
+                  height: 48,
+                  child: Center(
+                      child: Text('목록 로드 실패',
+                          style: TextStyle(color: Colors.red))));
             }
             // 데이터가 없거나 비어있을 때
             if (!snapshot.hasData || snapshot.data!['data'] == null) {
-              return const SizedBox(height: 48, child: Center(child: Text('데이터가 없습니다.', style: TextStyle(color: Colors.white70))));
+              return const SizedBox(
+                  height: 48,
+                  child: Center(
+                      child: Text('데이터가 없습니다.',
+                          style: TextStyle(color: Colors.white70))));
             }
 
             // 성공 시 드롭다운 메뉴 구성
             final subRegions = snapshot.data!['data'] as List<dynamic>;
+            if (_selectedSubRegion == null) {
+              _selectedSubRegion = subRegions[0]['sgg'] as String?;
+            }
+
             return Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -576,24 +694,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: _selectedSubRegion,
                   isExpanded: true,
                   dropdownColor: const Color(0xFF334155),
-                  hint: const Text('시/군/구 선택', style: TextStyle(color: Colors.white70)),
-                  icon: const Icon(Icons.arrow_drop_down, color: Colors.white70),
+                  hint: const Text('시군구 선택',
+                      style: TextStyle(color: Colors.white70)),
+                  icon:
+                      const Icon(Icons.arrow_drop_down, color: Colors.white70),
                   style: const TextStyle(color: Colors.white),
-                  items: subRegions.map<DropdownMenuItem<String>>((item) {
-                    final sggName = item['sgg'] as String? ?? '-';
+                  items: subRegions
+                      .where((item) => item['sgg'] != null)
+                      .map<DropdownMenuItem<String>>((item) {
+                    final sggName = item['sgg'] as String;
                     return DropdownMenuItem<String>(
                       value: sggName,
                       child: Text(sggName, overflow: TextOverflow.ellipsis),
                     );
                   }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedSubRegion = newValue;
-                      if (newValue != null) {
-                        // _onRegionTabTapped(newValue);
-                      }
-                    });
-                  },
+                  onChanged: onSubRegionSelected,
+                  //
+                  // onChanged: (String? newValue) {
+                  //   if (newValue != null) {
+                  //     setState(() {
+                  //       _selectedSubRegion = newValue;
+                  //       _selAreaSgg = newValue;
+                  //       _selAreaLimit = 10;
+                  //       _fetchAreaData();
+                  //     });
+                  //   }
+                  // },
                 ),
               ),
             );
@@ -602,7 +728,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-
 
   // 아파트 리스트 아이템 UI
   Widget _buildApartmentListItem(
@@ -650,15 +775,39 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // 지역 리스트 아이템 UI
-  Widget _buildRegionItem(String text) {
+  Widget _buildRegionItem(Map<String, dynamic> itemData) {
+    // 1. Map에서 데이터 추출 (null일 경우 기본값 사용)
+    final String sggName = itemData['sgg'] ?? '알 수 없는 지역';
+    final int count = itemData['cnt'] as int? ?? 0;
+
+    // 2. 숫자에 쉼표 포맷 적용
+    final numberFormatter = NumberFormat('#,###');
+    final String formattedCount = numberFormatter.format(count);
+
     return InkWell(
       onTap: () {
-        /* 지역 탭 시 로직 */
+        // 이 지역을 탭했을 때 상단 아파트 리스트 필터링
+        _onFilterTapped(sggName);
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        // child: Text(text, style: _dropdownItemStyle),
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          // 3. Row를 사용하여 양쪽 끝 정렬
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // 왼쪽: 지역 이름
+            Text(sggName, style: _listItemNameStyle),
+            // 오른쪽: 조회수 (cnt)
+            Text(
+              formattedCount,
+              style: _listItemDetailsStyle.copyWith(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -685,5 +834,4 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(subtitle, style: _cardLargeTextStyle)
         ]));
   }
-
 }
