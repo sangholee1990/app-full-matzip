@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class MatzipApiService {
   final String _baseUrl = dotenv.get('BASE_URL', fallback: null);
 
-  // 2. 새로운 API 명세에 맞는 함수 작성
   Future<Map<String, dynamic>> fetchData({required String apiUrl, required Map<String, dynamic> apiParam}) async {
 
     final Map<String, String> apiParamQuery = apiParam.map(

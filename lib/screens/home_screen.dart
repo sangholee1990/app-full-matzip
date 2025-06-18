@@ -50,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // 위젯이 처음 로드될 때 '전국'에 대한 데이터를 가져옴
     _fetchApartments();
-    _fetchRegions();
-    _fetchAreaData();
+    // 초기 지역 데이터 로드 및 첫 번째 하위 지역 자동 선택 실행
+    _onRegionTabTapped(_selectedRegionTab, isInitialLoad: true);
   }
 
   // 필터에 맞는 데이터를 불러오는 함수
@@ -115,11 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchApartments();
   }
 
-  void _onRegionTabTapped(String regionName) {
-    if (_selectedRegionTab != regionName) {
+  // [수정] 상위 지역 탭 선택 시 로직
+  void _onRegionTabTapped(String regionName, {bool isInitialLoad = false}) {
+    // 동일한 탭을 다시 누르거나, 초기 로드가 아닐 때만 실행
+    if (_selectedRegionTab != regionName || isInitialLoad) {
       setState(() {
         _selectedRegionTab = regionName;
+        // 하위 지역 선택 및 관련 데이터를 모두 초기화
         _selectedSubRegion = null;
+        _selAreaSgg = null;
+        _selAreaData = Future.value({'data': []}); // 이전 목록을 지움
         _fetchRegions();
       });
     }
@@ -317,12 +322,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             return const SizedBox.shrink();
 
                           final String rank = (index + 1).toString();
-                          final String name = itemData['apt'] ?? '이름 없음';
-                          final String details =
-                              "조회수 증가 +${itemData['cnt'] ?? ''}";
+                          final String name = itemData['apt'];
+                          // final String details = "조회수 증가 +${itemData['cnt'] ?? ''}";
+                          final int count = itemData['cnt'] as int? ?? 0;
+                          final String formattedCount = NumberFormat('#,###').format(count);
+                          final String details = "조회수 증가 +$formattedCount";
                           final bool isNew = Random(index).nextBool();
-                          final bool hasUpArrow =
-                              !isNew && Random(index + 1).nextBool();
+                          final bool hasUpArrow = Random(index + 1).nextBool();
                           return _buildApartmentListItem(
                             context,
                             rank,
@@ -344,14 +350,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: 'TOP 10 지역',
                         future: _regionsFuture,
                         data: _selAreaData,
-                        // headerContent: _buildRegionSelector(),
                         headerContent: _buildRegionSelector(
                           onTabSelected: (tabName) {
-                            // 기존 _onRegionTabTapped의 로직
                             _onRegionTabTapped(tabName);
                           },
                           onSubRegionSelected: (newValue) {
-                            // 기존 Dropdown의 onChanged 로직
                             if (newValue != null) {
                               setState(() {
                                 _selectedSubRegion = newValue;
@@ -363,19 +366,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         itemBuilder: (itemData, index) {
-
                           if (itemData['apt'] == null) {
                             return const SizedBox.shrink();
                           }
 
-
                           final String rank = (index + 1).toString();
-                          final String name = itemData['apt'] ?? '이름 없음';
-                          final String details =
-                              "조회수 증가 +${itemData['cnt'] ?? ''}";
+                          final String name = itemData['apt'];
+                          // final String details = "조회수 증가 +${itemData['cnt'] ?? ''}";
+                          final int count = itemData['cnt'] as int? ?? 0;
+                          final String formattedCount = NumberFormat('#,###').format(count);
+                          final String details = "조회수 증가 +$formattedCount";
                           final bool isNew = Random(index).nextBool();
-                          final bool hasUpArrow =
-                              !isNew && Random(index + 1).nextBool();
+                          final bool hasUpArrow = Random(index + 1).nextBool();
                           return _buildApartmentListItem(
                             context,
                             rank,
@@ -387,8 +389,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         onSeeMoreTapped: _onAreaDataSeeMore,
                       ),
-                    ),
-                    const SizedBox(height: 20 + 60),
+                    )
+                    // const SizedBox(height: 20 + 60),
+                    // const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -492,7 +495,6 @@ class _HomeScreenState extends State<HomeScreen> {
               FutureBuilder<Map<String, dynamic>>(
                 future: future,
                 builder: (context, snapshot) {
-                  // final date = snapshot.hasData ? (snapshot.data!['date'] ?? '-') : '-';
                   final String date =
                       DateFormat('yyyy-MM-dd').format(DateTime.now());
                   return Text('데이터 산출일 : $date',
@@ -517,7 +519,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Center(
                       child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 40.0),
-                          child: CircularProgressIndicator()));
+                          child:
+                              CircularProgressIndicator(color: Colors.white)));
                 }
                 // 2. 에러 상태 처리
                 if (snapshot.hasError) {
@@ -537,7 +540,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 40.0),
                           child:
-                              Text('데이터가 없습니다.', style: _listItemNameStyle)));
+                              Text('검색 결과가 없습니다.', style: _listItemNameStyle)));
                 }
 
                 // 4. 성공 시 데이터 목록 표시
@@ -561,8 +564,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: onSeeMoreTapped,
                 child: const Opacity(
                     opacity: 0.50,
-                    child: Text('더보기', textAlign: TextAlign.center, style: _seeMoreStyle)
-                ),
+                    child: Text('더보기',
+                        textAlign: TextAlign.center, style: _seeMoreStyle)),
               ),
             ),
           ] else
@@ -600,11 +603,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // [신규] 탭과 드롭다운을 모두 포함하는 위젯 빌더
+  // [수정] 탭과 드롭다운을 모두 포함하는 위젯 빌더
   Widget _buildRegionSelector({
     required ValueChanged<String> onTabSelected,
     required ValueChanged<String?> onSubRegionSelected,
-}) {
+  }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -614,7 +617,6 @@ class _HomeScreenState extends State<HomeScreen> {
             final isSelected = tabName == _selectedRegionTab;
             return Expanded(
               child: InkWell(
-                // onTap: () => _onRegionTabTapped(tabName),
                 onTap: () => onTabSelected(tabName),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -643,7 +645,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
 
-        // 2. 하위 지역 선택 드롭다운 (FutureBuilder 사용)
+        // [수정] 2. 하위 지역 선택 드롭다운 (FutureBuilder 사용)
         FutureBuilder<Map<String, dynamic>>(
           future: _regionsFuture,
           builder: (context, snapshot) {
@@ -655,8 +657,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white))),
+                        child: CircularProgressIndicator(color: Colors.white))),
               );
             }
             // 에러 발생 시
@@ -668,18 +669,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(color: Colors.red))));
             }
             // 데이터가 없거나 비어있을 때
-            if (!snapshot.hasData || snapshot.data!['data'] == null) {
+            if (!snapshot.hasData ||
+                snapshot.data!['data'] == null ||
+                (snapshot.data!['data'] as List).isEmpty) {
               return const SizedBox(
                   height: 48,
                   child: Center(
-                      child: Text('데이터가 없습니다.',
+                      child: Text('검색 결과가 없습니다.',
                           style: TextStyle(color: Colors.white70))));
             }
 
             // 성공 시 드롭다운 메뉴 구성
-            final subRegions = snapshot.data!['data'] as List<dynamic>;
-            if (_selectedSubRegion == null) {
-              _selectedSubRegion = subRegions[0]['sgg'] as String?;
+            final subRegionsRaw = snapshot.data!['data'] as List<dynamic>;
+            final subRegionNames = subRegionsRaw
+                .where((item) => item['sgg'] != null)
+                .map((item) => item['sgg'] as String)
+                .toList();
+
+            // 탭 변경 후 _selectedSubRegion이 null인 경우,
+            // 첫 번째 아이템을 자동으로 선택하도록 콜백을 예약합니다.
+            if (_selectedSubRegion == null && subRegionNames.isNotEmpty) {
+              final firstSubRegion = subRegionNames.first;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                // 위젯이 여전히 마운트된 상태인지 확인 후 상태 업데이트
+                if (mounted) {
+                  onSubRegionSelected(firstSubRegion);
+                }
+              });
+            }
+
+            // 현재 빌드 프레임에서 Dropdown의 값으로 사용할 변수.
+            String? currentSelection = _selectedSubRegion;
+            if (currentSelection == null ||
+                !subRegionNames.contains(currentSelection)) {
+              currentSelection =
+                  subRegionNames.isNotEmpty ? subRegionNames.first : null;
+            }
+
+            if (currentSelection == null) {
+              return const SizedBox(
+                  height: 48,
+                  child: Center(
+                      child: Text('선택 가능한 지역이 없습니다.',
+                          style: TextStyle(color: Colors.white70))));
             }
 
             return Container(
@@ -691,7 +723,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  value: _selectedSubRegion,
+                  value: currentSelection,
                   isExpanded: true,
                   dropdownColor: const Color(0xFF334155),
                   hint: const Text('시군구 선택',
@@ -699,27 +731,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon:
                       const Icon(Icons.arrow_drop_down, color: Colors.white70),
                   style: const TextStyle(color: Colors.white),
-                  items: subRegions
-                      .where((item) => item['sgg'] != null)
-                      .map<DropdownMenuItem<String>>((item) {
-                    final sggName = item['sgg'] as String;
+                  items:
+                      subRegionNames.map<DropdownMenuItem<String>>((sggName) {
                     return DropdownMenuItem<String>(
                       value: sggName,
                       child: Text(sggName, overflow: TextOverflow.ellipsis),
                     );
                   }).toList(),
                   onChanged: onSubRegionSelected,
-                  //
-                  // onChanged: (String? newValue) {
-                  //   if (newValue != null) {
-                  //     setState(() {
-                  //       _selectedSubRegion = newValue;
-                  //       _selAreaSgg = newValue;
-                  //       _selAreaLimit = 10;
-                  //       _fetchAreaData();
-                  //     });
-                  //   }
-                  // },
                 ),
               ),
             );
@@ -741,20 +760,32 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Row(
           children: [
+            // 1. 순위와 순위 변동 아이콘 (고정 너비)
             SizedBox(
-                width: 35.0,
-                child: Row(children: [
+              width: 40.0, // 순위(최대 2자리)와 아이콘을 모두 표시할 충분한 공간
+              child: Row(
+                children: [
                   Text(rank, style: _listItemRankStyle),
+                  const SizedBox(width: 4), // 숫자와 아이콘 사이의 간격
                   if (hasUpArrow)
                     const Icon(Icons.arrow_upward,
-                        color: Color(0xFF14B997), size: 14)
-                ])),
-            if (isNew)
-              Container(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: const Text('NEW', style: _listItemNewStyle))
-            else
-              const SizedBox(width: 38),
+                        color: Color(0xFF14B997), size: 14),
+                ],
+              ),
+            ),
+
+            // 2. 'NEW' 태그 (고정 너비)
+            SizedBox(
+              width: 40.0, // 'NEW' 태그 또는 공백을 위한 고정 공간
+              child: isNew
+                  ? const Align(
+                      alignment: Alignment.centerLeft, // 왼쪽 정렬
+                      child: Text('NEW', style: _listItemNewStyle),
+                    )
+                  : const SizedBox(), // isNew가 아닐 경우, 공간만 차지하고 내용은 없음
+            ),
+
+            // 3. 아파트 이름과 상세 정보 (가변 너비)
             Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -766,6 +797,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(details, style: _listItemDetailsStyle),
                   ]),
             ),
+
+            // 4. 오른쪽 화살표 아이콘
             const Icon(Icons.arrow_forward_ios,
                 color: Colors.white54, size: 16),
           ],
