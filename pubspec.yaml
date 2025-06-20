@@ -40,24 +40,24 @@ dependencies:
   webview_flutter: 4.4.1
   expressions: ^0.2.5
   http: ^1.1.0
-  #image_picker: 1.1.2    # 이뮬레이터에서 동작하지 않음
-  image_picker: 0.8.7     # 이뮬레이터에서 동작함
-  file_picker: ^8.0.0    # Windows에서 파일 선택할 때 사용
-  camera: ^0.10.5+5      # Windows에서 카메라 사용 가능
-  dio: ^5.2.1             # 이미지/동영상 업로드를 위한 라이브러리
-  flutter_gemini: 2.0.5        # Gemini 생성형 AI 서비스 (텍스트만 가능)
-  path_provider: ^2.0.12       # Path Provider
-  image: ^3.1.0                # Image
-
-  firebase_core: ^3.6.0        # Firebase Core
+  #image_picker: 1.1.2
+  image_picker: 0.8.7
+  file_picker: ^8.0.0
+  camera: ^0.10.5+5
+  dio: ^5.2.1
+  flutter_gemini: 2.0.5
+  path_provider: ^2.0.12
+  image: ^3.1.0
+  firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
-  firebase_storage: ^12.3.4    # Firebase Storage
-  firebase_vertexai: ^1.0.3    # Vertexai (멀티모달) - 관심있으면 구현해 볼 것
+  firebase_storage: ^12.3.4
+  firebase_vertexai: ^1.0.3
   image_picker_windows: ^0.2.1+1
   fl_chart: ^0.68.0
   flutter_dot_json_env: ^1.0.3
   flutter_dotenv: ^5.1.0
-
+  intl: ^0.19.0
+  autocomplete_textfield: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -85,7 +85,6 @@ flutter:
   assets:
     - images/
     - json/
-    - config/local.json
     - config/local.env
 
 
