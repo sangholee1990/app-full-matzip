@@ -95,7 +95,7 @@ class CommonBottomNavigationBar extends StatelessWidget {
           Navigator.pushReplacementNamed(context, '/ai-recommendation-preview');
           break;
         case 4:
-          // '서비스' 페이지 라우트 추가 필요
+          Navigator.pushReplacementNamed(context, '/service');
           break;
       }
     }
@@ -114,7 +114,7 @@ class CommonBottomNavigationBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.apartment_outlined), activeIcon: Icon(Icons.apartment), label: '아파트'),
         BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined), activeIcon: Icon(Icons.location_on), label: '로컬'),
         BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: 'AI추천'),
-        BottomNavigationBarItem(icon: Icon(Icons.menu), label: '서비스'),
+        BottomNavigationBarItem(icon: Icon(Icons.menu_outlined), activeIcon: Icon(Icons.menu), label: '서비스'),
       ],
     );
   }

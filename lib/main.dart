@@ -12,6 +12,7 @@ import 'screens/splash_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_dot_json_env/flutter_dot_json_env.dart';
 import 'dart:convert';
+import 'package:app_full_matzip/screens/service_screen.dart';
 
 //================================================================================
 // 1. Main Application & Navigation Setup (기존 파일들을 통합하는 메인 파일)
@@ -22,8 +23,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: "config/local.env");
-  print(dotenv.get('BASE_URL', fallback: null));
-  print(dotenv.get('API_KEY', fallback: null));
+  // print(dotenv.get('BASE_URL', fallback: null));
+  // print(dotenv.get('API_KEY', fallback: null));
 
   runApp(const MatzipApp());
 }
@@ -64,6 +65,7 @@ class MatzipApp extends StatelessWidget {
         '/ai-recommendation-preview': (context) => const AiRecommendationScreen(),
         '/apartment-details': (context) => const ApartmentDetailScreen(),
         '/apartment-data': (context) => const ApartmentDataScreen(),
+        '/service': (context) => const ServiceScreen(),
       },
     );
   }

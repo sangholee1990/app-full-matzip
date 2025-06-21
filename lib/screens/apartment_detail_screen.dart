@@ -62,7 +62,7 @@ class _ApartmentDetailScreenState extends State<ApartmentDetailScreen> with Sing
         showBackButton: true,
       ),
       // [변경] CommonBottomNavigationBar 적용
-      bottomNavigationBar: const CommonBottomNavigationBar(currentIndex: 3),
+      // bottomNavigationBar: const CommonBottomNavigationBar(currentIndex: 3),
       // [변경] 메인 콘텐츠를 body 속성으로 이동
       body: ListView(
         padding: EdgeInsets.zero,

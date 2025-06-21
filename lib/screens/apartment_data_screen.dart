@@ -114,7 +114,7 @@ class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
       if (mounted) {
         setState(() {
           _apartmentList = (response['data'] as List).cast<Map<String, dynamic>>();
-          print(_apartmentList);
+          // print(_apartmentList);
         });
       }
     } catch (e) {
