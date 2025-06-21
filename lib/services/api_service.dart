@@ -34,6 +34,8 @@ class MatzipApiService {
       final String responseBody = utf8.decode(response.bodyBytes);
 
       final Map<String, dynamic> decodedData = json.decode(responseBody);
+      // print(decodedData);
+
       if (decodedData['status'] == 'fail') {
         throw Exception(decodedData['message']);
       }

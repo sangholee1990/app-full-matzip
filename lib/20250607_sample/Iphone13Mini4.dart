@@ -768,7 +768,8 @@ class _Iphone13Mini4State extends State<Iphone13Mini4> with SingleTickerProvider
                       case 2021: text = '‘21'; break; case 2023: text = '‘23'; break;
                       case 2024: text = '‘24'; break;
                     }
-                    return SideTitleWidget(axisSide: meta.axisSide, child: Text(text, style: _chartAxisLabelStyle));
+                    return SideTitleWidget(meta: meta,
+                    child: Text(text, style: _chartAxisLabelStyle));
                   },
                 ),
               ),
@@ -883,7 +884,7 @@ class _Iphone13Mini4State extends State<Iphone13Mini4> with SingleTickerProvider
                   interval: 5,
                   getTitlesWidget: (double value, TitleMeta meta) {
                     return SideTitleWidget(
-                      axisSide: meta.axisSide,
+                      meta: meta,
                       child: Text('${value.toInt()}', style: _chartAxisLabelStyle),
                     );
                   },
