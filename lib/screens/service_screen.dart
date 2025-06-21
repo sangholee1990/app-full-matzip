@@ -123,7 +123,7 @@ class ServiceScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CommonBottomNavigationBar(currentIndex: 4),
+      bottomNavigationBar: const CommonBottomNavBar(currentIndex: 4),
     );
   }
 

@@ -455,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       // ** 공통 네비게이션 바 적용 **
-      bottomNavigationBar: const CommonBottomNavigationBar(currentIndex: 0),
+      bottomNavigationBar: const CommonBottomNavBar(currentIndex: 0),
     );
   }
 

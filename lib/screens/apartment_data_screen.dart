@@ -450,7 +450,7 @@ class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
               )),
         ],
       ),
-      bottomNavigationBar: const CommonBottomNavigationBar(currentIndex: 1),
+      bottomNavigationBar: const CommonBottomNavBar(currentIndex: 1),
     );
   }
 

@@ -32,7 +32,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () => Navigator.of(context).pop(),
             )
           else
-            const SizedBox(width: 16), // 뒤로가기 버튼 없을 때 여백
+            const SizedBox(width: 16),
 
           const Icon(Icons.maps_home_work_outlined, color: Colors.white, size: 24),
           const SizedBox(width: 8),
@@ -68,10 +68,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 
 // 2-2. 공통 하단 네비게이션 바
-class CommonBottomNavigationBar extends StatelessWidget {
+class CommonBottomNavBar extends StatelessWidget {
   final int currentIndex;
 
-  const CommonBottomNavigationBar({
+  const CommonBottomNavBar({
     super.key,
     required this.currentIndex,
   });
@@ -89,7 +89,7 @@ class CommonBottomNavigationBar extends StatelessWidget {
           Navigator.pushReplacementNamed(context, '/apartment-data');
           break;
         case 2:
-          // Navigator.pushReplacementNamed(context, '/apartment-details');
+          Navigator.pushReplacementNamed(context, '/local');
           break;
         case 3:
           Navigator.pushReplacementNamed(context, '/ai-recommendation-preview');

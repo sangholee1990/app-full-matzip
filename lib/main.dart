@@ -13,6 +13,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_dot_json_env/flutter_dot_json_env.dart';
 import 'dart:convert';
 import 'package:app_full_matzip/screens/service_screen.dart';
+import 'package:app_full_matzip/screens/local_screen.dart';
 
 //================================================================================
 // 1. Main Application & Navigation Setup (기존 파일들을 통합하는 메인 파일)
@@ -66,6 +67,7 @@ class MatzipApp extends StatelessWidget {
         '/apartment-details': (context) => const ApartmentDetailScreen(),
         '/apartment-data': (context) => const ApartmentDataScreen(),
         '/service': (context) => const ServiceScreen(),
+        '/local': (context) => const LocalScreen(),
       },
     );
   }
