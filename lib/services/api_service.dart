@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MatzipApiService {
-  final String _baseUrl = dotenv.get('BASE_URL', fallback: null);
+  final String _baseUrl = dotenv.get('BASE_URL', fallback: 'http://125.251.52.42:9000');
 
   Future<Map<String, dynamic>> fetchData({required String apiUrl, required Map<String, dynamic> apiParam}) async {
 
@@ -23,7 +23,7 @@ class MatzipApiService {
 
     final Map<String, String> headers = {
       'accept': 'application/json',
-      'api': dotenv.get('API_KEY', fallback: null),
+      'api': dotenv.get('API_KEY', fallback: '20240922-topbds'),
     };
 
     final response = await http.post(

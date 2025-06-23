@@ -412,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     //   width: 92,
                     //   height: 27,
                     // ),
-                    SvgPicture.asset('svg/logo_matzip_color.svg', width: 92),
+                    SvgPicture.asset('assets/svg/logo_matzip_color.svg', width: 92),
                     Row(
                       children: [
                         IconButton(

@@ -86,10 +86,6 @@ flutter:
   # To add json to your application, add an json section, like this:
   assets:
     - assets/
-    - assets/svg/
-    - assets/images/
-    - assets/json/
-    - assets/config/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
