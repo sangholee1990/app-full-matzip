@@ -23,9 +23,9 @@ import 'package:app_full_matzip/screens/local_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: "config/local.env");
-  // print(dotenv.get('BASE_URL', fallback: null));
-  // print(dotenv.get('API_KEY', fallback: null));
+  await dotenv.load(fileName: "assets/config/local.env");
+  print(dotenv.get('BASE_URL', fallback: null));
+  print(dotenv.get('API_KEY', fallback: null));
 
   runApp(const MatzipApp());
 }

@@ -78,7 +78,7 @@ class _AiRecommendationScreenState extends State<AiRecommendationScreen> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset('svg/logo_matzip_color.svg', width: 92),
+          SvgPicture.asset('assets/svg/logo_matzip_color.svg', width: 92),
           Row(
             children: [
               IconButton(icon: const Icon(Icons.notifications_none, color: Colors.grey), onPressed: () {}),

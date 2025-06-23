@@ -266,7 +266,7 @@ class _LocalScreenState extends State<LocalScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Image.asset('images/logo_matzip_white.png', width: 92, height: 27),
-          SvgPicture.asset('svg/logo_matzip_white.svg', width: 92),
+          SvgPicture.asset('assets/svg/logo_matzip_white.svg', width: 92),
           Row(
             children: [
               IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),

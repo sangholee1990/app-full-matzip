@@ -13,7 +13,7 @@ class ServiceScreen extends StatelessWidget {
     final List<Map<String, dynamic>> serviceItems = [
       {
         // 'iconAssetPath': 'images/icon_calendar.png',
-        'iconAssetPath': 'svg/icon_calendar.svg',
+        'iconAssetPath': 'assets/svg/icon_calendar.svg',
         'title': '월 정기구독 상품',
         'description': '원하는 지역구의 아파트별 시각화 및 \n예측 정보를 볼 수 있는 보고서와 AI매물 추천 서비스를 무제한으로 이용할 수 있습니다.',
         'buttonText': '장바구니 담기',
@@ -23,7 +23,7 @@ class ServiceScreen extends StatelessWidget {
       },
       {
         // 'iconAssetPath': 'images/icon_report.png',
-        'iconAssetPath': 'svg/icon_report.svg',
+        'iconAssetPath': 'assets/svg/icon_report.svg',
         'title': '보고서 단건 상품',
         'description': '사용자는 임장 시 용이한 \n아파트 보고서(단건)를 출력하여 이용할 수 있습니다.',
         'buttonText': '장바구니 담기',
@@ -33,7 +33,7 @@ class ServiceScreen extends StatelessWidget {
       },
       {
         // 'iconAssetPath': 'images/icon_dashboard.png',
-        'iconAssetPath': 'svg/icon_dashboard.svg',
+        'iconAssetPath': 'assets/svg/icon_dashboard.svg',
         'title': 'API 서비스 구축 상품',
         'description': '원하시는 조건에 맞는 \n부동산 데이터 API 제작 및 데이터 센터를 구축해 드립니다.',
         'buttonText': '신청하기',
@@ -51,7 +51,7 @@ class ServiceScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         titleSpacing: 20,
         automaticallyImplyLeading: false,
-        title: SvgPicture.asset('svg/logo_matzip_color.svg', width: 92),
+        title: SvgPicture.asset('assets/svg/logo_matzip_color.svg', width: 92),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none, color: Colors.grey),
