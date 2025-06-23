@@ -8,6 +8,7 @@ import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_dot_json_env/flutter_dot_json_env.dart';
 import 'package:app_full_matzip/services/api_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
 
@@ -402,53 +403,72 @@ class _HomeScreenState extends State<HomeScreen> {
               top: 0,
               child: Container(
                 color: const Color(0xFFF7F8FA).withOpacity(0.95),
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 15,
-                  bottom: 10,
-                ),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      // 자식 위젯들의 크기만큼만 공간을 차지하도록 설정
+                    // Image.asset(
+                    //   'images/logo_matzip_color.png',
+                    //   width: 92,
+                    //   height: 27,
+                    // ),
+                    SvgPicture.asset('svg/logo_matzip_color.svg', width: 92),
+                    Row(
                       children: [
-                        Icon(
-                          Icons.business_center,
-                          color: Color(0xFF161D24),
-                          size: 24,
+                        IconButton(
+                            icon: const Icon(Icons.notifications_none, color: Colors.grey),
+                            onPressed: () {}
                         ),
-                        SizedBox(width: 8),
-                        Text(
-                          "MATZIP",
-                          style: TextStyle(
-                            color: Color(0xFF161D24),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Pretendard Variable',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.notifications_none,
-                          color: Color(0xFF161D24),
-                          size: 24,
-                        ),
-                        SizedBox(width: 20),
-                        Icon(
-                          Icons.person_outline,
-                          color: Color(0xFF161D24),
-                          size: 24,
+                        IconButton(
+                            icon: const Icon(Icons.person_outline, color: Colors.grey),
+                            onPressed: () {}
                         ),
                       ],
                     ),
                   ],
                 ),
+
+                // child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     const Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       // 자식 위젯들의 크기만큼만 공간을 차지하도록 설정
+                //       children: [
+                //         Icon(
+                //           Icons.business_center,
+                //           color: Color(0xFF161D24),
+                //           size: 24,
+                //         ),
+                //         SizedBox(width: 8),
+                //         Text(
+                //           "MATZIP",
+                //           style: TextStyle(
+                //             color: Color(0xFF161D24),
+                //             fontSize: 18,
+                //             fontWeight: FontWeight.bold,
+                //             fontFamily: 'Pretendard Variable',
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     const Row(
+                //       children: [
+                //         Icon(
+                //           Icons.notifications_none,
+                //           color: Color(0xFF161D24),
+                //           size: 24,
+                //         ),
+                //         SizedBox(width: 20),
+                //         Icon(
+                //           Icons.person_outline,
+                //           color: Color(0xFF161D24),
+                //           size: 24,
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
               ),
             ),
           ],

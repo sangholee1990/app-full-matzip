@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
 import 'package:app_full_matzip/services/api_service.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // [수정] ApartmentInfo 클래스 제거
 
@@ -91,41 +92,23 @@ class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
   Future<void> _searchApartments() async {
     if (_selectedSido == null ||
         _selectedGusi == null ||
-        _selectedPyeong == null ||
-        _aptSearchText == null) {
+        _selectedPyeong == null) {
       return;
     }
-    setState(() {
-      _isListLoading = true;
-    });
-    try {
-      final params = {
-        'sgg': '${_selectedSido!} ${_selectedGusi!.split(' (')[0]}',
-        'area': _selectedPyeong!.split(' (')[0],
-        'srtYear': _currentRangeValues.start.round().toString(),
-        'endYear': _currentRangeValues.end.round().toString(),
-        'apt': _aptSearchText,
-        'limit': 10,
-        'page': 1,
-        'sort': 'date|desc',
-      };
-      final response = await _apiService.fetchData(
-          apiUrl: '/api/sel-real', apiParam: params);
-      if (mounted) {
-        setState(() {
-          _apartmentList = (response['data'] as List).cast<Map<String, dynamic>>();
-          // print(_apartmentList);
-        });
-      }
-    } catch (e) {
-      //...
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isListLoading = false;
-        });
-      }
-    }
+
+    final params = {
+      'sgg': '${_selectedSido!} ${_selectedGusi!.split(' (')[0]}',
+      'area': _selectedPyeong!.split(' (')[0],
+      'srtYear': _currentRangeValues.start.round().toString(),
+      'endYear': _currentRangeValues.end.round().toString(),
+      'apt': _aptSearchText,
+      'limit': 10,
+      'page': 1,
+      'sort': 'date|desc',
+    };
+    final response = await _apiService.fetchData(apiUrl: '/api/sel-real', apiParam: params);
+    _apartmentList = response['data'];
+    // print(_apartmentList);
   }
 
   void _clearSuggestionCache() {
@@ -251,6 +234,7 @@ class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
       appBar: AppBar(
         leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, size: 20),
+            // icon: Image.asset('images/logo_matzip_white.png'),
             onPressed: () => Navigator.pop(context)),
         title: const Text('아파트 데이터'),
         actions: [
@@ -545,6 +529,7 @@ class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
               divisions: (endYear - startYear),
               activeColor: const Color(0xFF0C493C),
               inactiveColor: Colors.white.withOpacity(0.5),
+              // labels: RangeLabels('${_currentRangeValues.start.round()}년', '${_currentRangeValues.end.round()}년'),
               labels: RangeLabels('${_currentRangeValues.start.round()}년', '${_currentRangeValues.end.round()}년'),
               onChangeEnd: (values) {
                 _searchApartments();
@@ -599,11 +584,8 @@ class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
                                 fontWeight: FontWeight.w600,
                                 height: 1.3)),
                         const SizedBox(height: 5),
-                        Text('조회수: ${numberFormatter.format(count)}',
-                            style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500))
+                        Text('거래가: ${item['amountConv']}억', style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500)),
+                        // Text('전용면적: ${item['capacity']}', style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500)),
                       ])),
               const SizedBox(width: 8),
               Icon(Icons.chevron_right, color: Colors.grey[400], size: 22)

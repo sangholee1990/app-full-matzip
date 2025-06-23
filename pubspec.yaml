@@ -59,6 +59,7 @@ dependencies:
   autocomplete_textfield: ^2.0.1
   printing: ^5.11.1
   pdf: ^3.10.8
+  flutter_svg: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -84,9 +85,11 @@ flutter:
 
   # To add json to your application, add an json section, like this:
   assets:
+    - assets/
+    - assets/svg/
     - assets/images/
     - assets/json/
-    - assets/config/local.env
+    - assets/config/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

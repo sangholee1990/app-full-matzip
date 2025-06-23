@@ -12,6 +12,8 @@ class MatzipApiService {
     );
 
     apiParamQuery.removeWhere((key, value) => key == 'sgg' && value == '전국');
+    print(apiUrl);
+    print(apiParamQuery);
 
     final Uri url = Uri.http(
       _baseUrl.split('//').last,

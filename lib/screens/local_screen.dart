@@ -10,6 +10,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LocalScreen extends StatefulWidget {
   const LocalScreen({super.key});
@@ -100,13 +101,13 @@ class _LocalScreenState extends State<LocalScreen> {
     final boldFont = pw.Font.ttf(boldFontData);
 
     // 데이터를 테이블 형태로 변환하는 헬퍼 함수
-    pw.Table _buildPdfTable(String title, List<Map<String, dynamic>> items, String key) {
+    pw.Table _buildPdfTable(String title, List<Map<String, dynamic>> items) {
       return pw.Table.fromTextArray(
         headerStyle: pw.TextStyle(font: boldFont, fontWeight: pw.FontWeight.bold, fontSize: 10),
         cellStyle: pw.TextStyle(font: font, fontSize: 9),
         headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300),
         headers: ['아파트', '동', '평수', '이전가격', '현재가격', '변화율(%)'],
-        data: items.where((item) => item['GRP'] == key).map((item) {
+        data: items.where((item) => item['GRP'] == title).take(10).map((item) {
           final krwFormat = NumberFormat.compact(locale: 'ko');
           return [
             item['APT'],
@@ -136,11 +137,11 @@ class _LocalScreenState extends State<LocalScreen> {
             pw.SizedBox(height: 20),
             pw.Text('최고상승 거래가 아파트', style: pw.TextStyle(font: boldFont, fontSize: 16)),
             pw.SizedBox(height: 10),
-            _buildPdfTable('최고상승', _topRisingApartments, "최고상승"),
+            _buildPdfTable('최고상승', _topRisingApartments),
             pw.SizedBox(height: 20),
             pw.Text('최고하락 거래가 아파트', style: pw.TextStyle(font: boldFont, fontSize: 16)),
             pw.SizedBox(height: 10),
-            _buildPdfTable('최고하락', _topRisingApartments, "최고하락"),
+            _buildPdfTable('최고하락', _topRisingApartments),
           ];
         },
       ),
@@ -194,7 +195,8 @@ class _LocalScreenState extends State<LocalScreen> {
       backgroundColor: const Color(0xFFF7F8FA),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
+          // constraints: const BoxConstraints(maxWidth: 900),
+          constraints: const BoxConstraints(),
           child: CustomScrollView(
             slivers: [
               _buildHeader(),
@@ -212,16 +214,27 @@ class _LocalScreenState extends State<LocalScreen> {
 
   Widget _buildHeader() {
     return SliverAppBar(
-      // ...
+      backgroundColor: const Color(0xFF161D24),
+      automaticallyImplyLeading: false,
+      pinned: true,
+      expandedHeight: 210,
       flexibleSpace: FlexibleSpaceBar(
         background: Padding(
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
           child: Column(
             children: [
-              _buildTopBar(), _buildTitle(), _buildFilters(),
-              const Spacer(),
-              _buildReportButton(), // [수정] 콜백 연결을 위해 context 전달
-              const SizedBox(height: 15),
+              _buildTopBar(),
+              _buildTitle(),
+              _buildFilters(),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: _buildReportButton(),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -236,10 +249,10 @@ class _LocalScreenState extends State<LocalScreen> {
         width: double.infinity,
         height: 35,
         child: ElevatedButton(
-          onPressed: _isDataLoading ? null : _printReport, // [수정] _printReport 함수 연결, 로딩 중 비활성화
+          onPressed: _isDataLoading ? null : _printReport,
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF14B997), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
           child: _isDataLoading
-              ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+              ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white))
               : const Text('보고서 출력', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
         ),
       ),
@@ -252,7 +265,8 @@ class _LocalScreenState extends State<LocalScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset('images/logo_matzip_white.png', width: 92, height: 27),
+          // Image.asset('images/logo_matzip_white.png', width: 92, height: 27),
+          SvgPicture.asset('svg/logo_matzip_white.svg', width: 92),
           Row(
             children: [
               IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
@@ -281,15 +295,15 @@ class _LocalScreenState extends State<LocalScreen> {
         children: [
           Expanded(child: _buildFilterDropdown(hint: '시도', items: _sidoList, value: _selectedSido, onChanged: _onSidoChanged)),
           const SizedBox(width: 8),
-          Expanded(child: _buildFilterDropdown(hint: '시/구', items: _gusiList, value: _selectedGusi, onChanged: _onGusiChanged)),
+          Expanded(child: _buildFilterDropdown(hint: '군', items: _gusiList, value: _selectedGusi, onChanged: _onGusiChanged)),
           const SizedBox(width: 8),
           SizedBox(
-            width: 65,
+            width: 80,
             height: 35,
             child: ElevatedButton(
               onPressed: _fetchChartData,
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF14B997), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-              child: const Text('검색'),
+              child: const Text('검색',  style: const TextStyle(color: Colors.white)),
             ),
           )
         ],
@@ -304,7 +318,7 @@ class _LocalScreenState extends State<LocalScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: ShapeDecoration(color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: isLoading
-          ? const Center(child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)))
+          ? const Center(child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: Colors.white)))
           : DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true, value: value,
@@ -318,7 +332,7 @@ class _LocalScreenState extends State<LocalScreen> {
   }
 
   Future<List<Map<String, dynamic>>> _fetchAllRegionData() async {
-    final responseData = await _apiService.fetchData(apiUrl: '/api/sel-statRealSearchBySgg', apiParam: {'page': 1, 'limit': '999', 'sort': 'cnt|desc'});
+    final responseData = await _apiService.fetchData(apiUrl: '/api/sel-statRealSearchBySgg', apiParam: {'page': 1, 'limit': 999, 'sort': 'cnt|desc'});
     if (responseData.containsKey('data') && responseData['data'] is List) {
       return (responseData['data'] as List).cast<Map<String, dynamic>>();
     }
@@ -491,16 +505,16 @@ class _ContentBody extends StatelessWidget {
   }
 
   // Other helper methods...
-  Widget _buildLoadingIndicator() => const SizedBox(height: 250, child: Center(child: CircularProgressIndicator()));
+  Widget _buildLoadingIndicator() => const SizedBox(height: 250, child: Center(child: CircularProgressIndicator(color: Colors.grey)));
 
   Widget _buildSection({required String title, required Widget child}) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 16),
+          const SizedBox(height: 0),
           child,
         ],
       ),

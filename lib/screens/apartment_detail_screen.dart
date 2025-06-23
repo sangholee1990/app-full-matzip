@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
+import 'package:flutter_svg/flutter_svg.dart';
 
 //================================================================================
 // 5. Apartment Detail Screen (공통 위젯 적용 및 Scaffold 구조로 변경)
@@ -56,7 +57,7 @@ class _ApartmentDetailScreenState extends State<ApartmentDetailScreen> with Sing
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
-      // [변경] CommonAppBar 적용
+      // [변경] CommonAppBar 적용 수정 필요
       appBar: const CommonAppBar(
         title: 'AI 매물 추천 미리보기',
         showBackButton: true,
