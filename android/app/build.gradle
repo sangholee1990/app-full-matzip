@@ -35,6 +35,10 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         targetSdkVersion flutter.targetSdkVersion
+
+//        def versionName = variant.versionName
+//        def newName = "matzip-${versionName}-${variant.name}.apk"
+//        outputFileName = newName
     }
 
     buildTypes {
