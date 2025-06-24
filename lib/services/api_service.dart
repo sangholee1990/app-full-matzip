@@ -17,6 +17,7 @@ class MatzipApiService {
     );
 
     apiParamQuery.removeWhere((key, value) => key == 'sgg' && value == '전국');
+    apiParamQuery.removeWhere((key, value) => key == 'area' && value == '전체');
     print(apiUrl);
     print(apiParamQuery);
 
@@ -63,6 +64,7 @@ class MatzipApiService {
     );
 
     apiParamQuery.removeWhere((key, value) => key == 'sgg' && value == '전국');
+    apiParamQuery.removeWhere((key, value) => key == 'area' && value == '전체');
     print(apiUrl);
     print(apiParamQuery);
 
