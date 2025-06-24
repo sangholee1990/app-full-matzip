@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
+import 'package:app_full_matzip/utils/common_bottom_nav_bar.dart';
 import 'package:app_full_matzip/services/api_service.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // [수정] ApartmentInfo 클래스 제거
 
-class ApartmentDataScreen extends StatefulWidget {
-  const ApartmentDataScreen({super.key});
+class AptScreen extends StatefulWidget {
+  const AptScreen({super.key});
 
   @override
-  State<ApartmentDataScreen> createState() => _ApartmentDataScreenState();
+  State<AptScreen> createState() => _AptScreenState();
 }
 
-class _ApartmentDataScreenState extends State<ApartmentDataScreen> {
+class _AptScreenState extends State<AptScreen> {
   final MatzipApiService _apiService = MatzipApiService();
 
   late RangeValues _currentRangeValues;

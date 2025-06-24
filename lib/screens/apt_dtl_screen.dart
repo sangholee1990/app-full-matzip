@@ -1,4 +1,4 @@
-import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart'; // [변경] 공통 위젯 import
+import 'package:app_full_matzip/utils/common_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -10,13 +10,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 // 5. Apartment Detail Screen (공통 위젯 적용 및 Scaffold 구조로 변경)
 // 파일 경로: lib/screens/apartment_detail_screen.dart
 //================================================================================
-class ApartmentDetailScreen extends StatefulWidget {
-  const ApartmentDetailScreen({super.key});
+class AptDtlScreen extends StatefulWidget {
+  const AptDtlScreen({super.key});
   @override
-  State<ApartmentDetailScreen> createState() => _ApartmentDetailScreenState();
+  State<AptDtlScreen> createState() => _AptDtlScreenState();
 }
 
-class _ApartmentDetailScreenState extends State<ApartmentDetailScreen> with SingleTickerProviderStateMixin {
+class _AptDtlScreenState extends State<AptDtlScreen> with SingleTickerProviderStateMixin {
   // --- 상태 변수 ---
   bool _isFavorite = false;
   late TabController _tabController;

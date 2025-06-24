@@ -86,13 +86,13 @@ class CommonBottomNavBar extends StatelessWidget {
           Navigator.pushReplacementNamed(context, '/home');
           break;
         case 1:
-          Navigator.pushReplacementNamed(context, '/apartment-data');
+          Navigator.pushReplacementNamed(context, '/apt');
           break;
         case 2:
           Navigator.pushReplacementNamed(context, '/local');
           break;
         case 3:
-          Navigator.pushReplacementNamed(context, '/ai-recommendation-preview');
+          Navigator.pushReplacementNamed(context, '/rcmd');
           break;
         case 4:
           Navigator.pushReplacementNamed(context, '/service');

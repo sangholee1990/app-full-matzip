@@ -1,7 +1,7 @@
 // lib/screens/service_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
+import 'package:app_full_matzip/utils/common_bottom_nav_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ServiceScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class ServiceScreen extends StatelessWidget {
         'description': '원하는 지역구의 아파트별 시각화 및 \n예측 정보를 볼 수 있는 보고서와 AI매물 추천 서비스를 무제한으로 이용할 수 있습니다.',
         'buttonText': '장바구니 담기',
         'onPressed': () {
-          _showCustomSnackBar(context, '서비스 준비 중입니다.');
+          _showSnackBar(context, '서비스 준비 중입니다.');
         },
       },
       {
@@ -28,7 +28,7 @@ class ServiceScreen extends StatelessWidget {
         'description': '사용자는 임장 시 용이한 \n아파트 보고서(단건)를 출력하여 이용할 수 있습니다.',
         'buttonText': '장바구니 담기',
         'onPressed': () {
-          _showCustomSnackBar(context, '서비스 준비 중입니다.');
+          _showSnackBar(context, '서비스 준비 중입니다.');
         },
       },
       {
@@ -38,7 +38,7 @@ class ServiceScreen extends StatelessWidget {
         'description': '원하시는 조건에 맞는 \n부동산 데이터 API 제작 및 데이터 센터를 구축해 드립니다.',
         'buttonText': '신청하기',
         'onPressed': () {
-          _showCustomSnackBar(context, '신청이 완료되었습니다. 담당자가 곧 연락드릴 예정입니다.');
+          _showSnackBar(context, '신청이 완료되었습니다. 담당자가 곧 연락드릴 예정입니다.');
         },
       },
     ];
@@ -93,7 +93,7 @@ class ServiceScreen extends StatelessWidget {
   }
 
   // SnackBar 헬퍼 함수는 그대로 유지하여 중복 제거
-  void _showCustomSnackBar(BuildContext context, String message) {
+  void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

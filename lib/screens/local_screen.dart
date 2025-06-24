@@ -1,7 +1,7 @@
 // lib/screens/local_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
+import 'package:app_full_matzip/utils/common_bottom_nav_bar.dart';
 import 'package:app_full_matzip/services/api_service.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';

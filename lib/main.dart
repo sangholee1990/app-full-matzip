@@ -1,12 +1,15 @@
+import 'package:app_full_matzip/screens/apt_dtl_screen.dart';
+import 'package:app_full_matzip/screens/apt_screen.dart';
+import 'package:app_full_matzip/screens/rcmd_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 
-import 'screens/ai_recommendation_screen.dart';
-import 'screens/apartment_data_screen.dart';
-import 'screens/apartment_detail_screen.dart';
+import 'screens/rcmd_screen.dart';
+import 'screens/apt_screen.dart';
+import 'screens/apt_dtl_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -63,9 +66,9 @@ class MatzipApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
-        '/ai-recommendation-preview': (context) => const AiRecommendationScreen(),
-        '/apartment-details': (context) => const ApartmentDetailScreen(),
-        '/apartment-data': (context) => const ApartmentDataScreen(),
+        '/rcmd': (context) => const RcmdScreen(),
+        '/aptDtl': (context) => const AptDtlScreen(),
+        '/apt': (context) => const AptScreen(),
         '/service': (context) => const ServiceScreen(),
         '/local': (context) => const LocalScreen(),
       },

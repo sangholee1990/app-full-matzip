@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
-import 'package:app_full_matzip/widgets/common_bottom_nav_bar.dart';
+import 'package:app_full_matzip/utils/common_bottom_nav_bar.dart';
 
 // import 'package:flutter_config/flutter_config.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
