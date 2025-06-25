@@ -426,9 +426,9 @@ class _AptScreenState extends State<AptScreen> {
     if (_isListLoading) {
       return const Center(child: CircularProgressIndicator(color: Color(0xFF14B997)));
     }
-    if (_errorMessage != null) {
-      return Center(child: Text('오류가 발생했습니다: $_errorMessage'));
-    }
+    // if (_errorMessage != null) {
+    //   return Center(child: Text('오류가 발생했습니다: $_errorMessage'));
+    // }
     if (_apartmentList.isEmpty) {
       return Container(
           color: Colors.white,

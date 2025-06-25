@@ -453,7 +453,7 @@ class _ContentBody extends StatelessWidget {
               bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40,
+                      reservedSize: 60,
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
                         if (index >= top10Data.length) return const SizedBox.shrink();
@@ -467,9 +467,11 @@ class _ContentBody extends StatelessWidget {
                             angle: -math.pi / 4,
                             alignment: Alignment.topCenter,
                             child: Text(
-                              displayName.length > 10 ? '${displayName.substring(0, 10)}..' : displayName,
+                              // displayName.length > 10 ? '${displayName.substring(0, 10)}..' : displayName,
+                              displayName.length > 4 ? '${displayName.substring(0, 4)}...' : displayName,
                               style: const TextStyle(fontSize: 10, color: Colors.grey),
-                              textAlign: TextAlign.center,
+                              // textAlign: TextAlign.center,
+                              textAlign: TextAlign.left,
                             ),
                           ),
                         );
